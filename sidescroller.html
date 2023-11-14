@@ -1,0 +1,307 @@
+<!doctype HTML>
+<html lang="de">
+	<head>
+		<meta charset="utf-8">
+		<title>Sidescroller</title>
+		<style>
+		body {
+			background-color: #333333;
+			color: grey;
+		}
+
+		#canvas {
+			position: absolute;
+			left:0;
+			right:0;
+			margin-left:auto;
+			margin-right: auto;
+			margin-top: 10vh;
+			border: solid 1px;
+			border-color: #000000;
+			border-radius:30px;
+		</style>
+	</head>
+	<body>
+	<canvas id="canvas"></canvas>
+		
+		<script>
+		// canvas aktivieren
+		var canvas = document.getElementById("canvas");
+		ctx = canvas.getContext('2d');
+
+		// canvas an die groesse des bildschirms anpassen
+		var sizeWidth = 0.8 * window.innerWidth;
+		var sizeHeight = 0.8 * window.innerHeight;
+		canvas.width = sizeWidth;
+		canvas.height = sizeHeight;	
+	
+		// bilder definieren
+		var raketenpic = new Image();
+		raketenpic.src = "pics/rakete.svg";
+		
+		var raketex = 0.1*sizeWidth;
+		var raketey = 0.5*sizeHeight;
+		var raketewidth = 0.18*sizeWidth;
+		var raketeheight = 0.09*sizeHeight;
+
+		//Levels
+		var level = 1;
+
+		var tasks = {	
+//			"1":[
+//				{"v_x":"1.4","v_y":"0","v_h":"0.8","v_w":"0.02"},
+//				{"v_x":"1.8","v_y":"0","v_h":"0.4","v_w":"0.02"},
+//				{"v_x":"1.8","v_y":"0.6","v_h":"0.4","v_w":"0.02"},
+//				{"v_x":"2.2","v_y":"0.3","v_h":"0.2","v_w":"0.02"},
+//				{"v_x":"2.2","v_y":"0.6","v_h":"0.3","v_w":"0.02"}
+//			],
+			"1":[
+				{"v_x":"1.2","v_y":"0.4","v_h":"0.02","v_w":"0.2"}, //1
+				{"v_x":"1.2","v_y":"0.6","v_h":"0.02","v_w":"0.2"}, //2
+				{"v_x":"1.4","v_y":"0.2","v_h":"0.2","v_w":"0.02"}, //3
+				{"v_x":"1.4","v_y":"0.6","v_h":"0.4","v_w":"0.02"}, //4
+				{"v_x":"1.4","v_y":"0.2","v_h":"0.02","v_w":"0.7"}, //5
+				{"v_x":"1.65","v_y":"0.4","v_h":"0.02","v_w":"1.8"},
+				{"v_x":"1.65","v_y":"0.6","v_h":"0.02","v_w":"1.8"},
+				{"v_x":"1.4","v_y":"0.97","v_h":"0.02","v_w":"1.8"}, // vw = 40	
+				{"v_x":"2.0","v_y":"0.8","v_h":"0.2","v_w":"0.02"}, //hallo
+				{"v_x":"1.7","v_y":"0.6","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"2.0","v_y":"0.2","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"2.25","v_y":"0.6","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"2.5","v_y":"0.8","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"2.75","v_y":"0.6","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"3.0","v_y":"0.8","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"3.25","v_y":"0.6","v_h":"0.2","v_w":"0.02"},
+	   			{"v_x":"2.5","v_y":"0.2","v_h":"0.02","v_w":"1.8"},
+				{"v_x":"3.7","v_y":"0.4","v_h":"0.02","v_w":"0.5"},
+				{"v_x":"3.7","v_y":"0","v_h":"0.4","v_w":"0.02"},
+				{"v_x":"4.2","v_y":"0.4","v_h":"0.4","v_w":"0.02"},
+				{"v_x":"3.7","v_y":"0.6","v_h":"0.3","v_w":"0.02"},
+				{"v_x":"3.7","v_y":"0.6","v_h":"0.02","v_w":"0.25"},
+		//		{"v_x":"3.85","v_y":"0.6","v_h":"0.2","v_w":"0.02"},
+				{"v_x":"3.97","v_y":"0.8","v_h":"0.02","v_w":"0.25"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+	//			{"v_x":"","v_y":"","v_h":"","v_w":"0.02"},
+
+				]
+		};
+
+		var goodies = {
+			"1":[
+				{"k_x":"0.6","k_y":"0.5","k_r":"0.1","farbe":"orange"},
+				{"k_x":"1.2","k_y":"0.5","k_r":"0.01","farbe":"orange"},
+				{"k_x":"2.05","k_y":"0.95","k_r":"0.01","farbe":"orange"}
+			]
+		};
+
+
+		// tastatursteuerung ermoeglichen
+		var keys = [];
+		document.body.addEventListener("keydown", function (e) {
+			keys[e.keyCode] = true;
+		});
+		document.body.addEventListener("keyup", function (e) {
+			keys[e.keyCode] = false;
+		});
+
+		var speed = 0.002;
+		var progress = 0;
+
+		var speed_2 = 4;
+	
+		//hindernisse		
+		var stop_left = 0;
+		var stop_right = 0;
+		var stop_up = 0;
+		var stop_down = 0;			
+
+		function update() {
+
+			ctx.clearRect(0, 0, canvas.width,canvas.height);
+
+			//kollision
+			var kollision = -1;
+			
+			//rand
+			if (raketex < 0){
+				raketex = 0;
+			}
+
+			if (raketex > sizeWidth-raketewidth){
+				raketex = sizeWidth-raketewidth;
+			}
+
+			if (raketey < 0){
+				raketey = 0;
+			}
+
+			if (raketey > sizeHeight-raketeheight){
+				raketey = sizeHeight-raketeheight;
+			}
+
+		
+
+
+
+			// goodies
+
+			for (var j=0; j<goodies[level].length; j++){
+
+				//console.log(goodies[level][j].k_x);
+
+				var kreisx = progress * sizeWidth + goodies[level][j].k_x * sizeWidth;
+				var kreisy = goodies[level][j].k_y * sizeHeight;
+				var kreisradius = goodies[level][j].k_r * sizeWidth;
+				var kreisfarbe= goodies[level][j].farbe;
+
+			//	console.log(kreisx, kreisy, kreisradius, kreisfarbe);
+
+				ctx.beginPath();
+				ctx.strokeStyle = kreisfarbe;
+				ctx.fillStyle = kreisfarbe;
+				ctx.arc(kreisx, kreisy, kreisradius, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.stroke();
+			
+		//		console.log(raketex , raketewidth , kreisx);			
+				if (raketex + raketewidth > kreisx - kreisradius && raketey + raketeheight < kreisy + kreisradius){
+					goodies[level][j].farbe = "#333333";
+				//	console.log("hallo");
+				}
+			}
+			
+			ctx.drawImage(raketenpic, raketex, raketey, raketewidth, raketeheight);
+			
+
+
+			//Viereck
+
+			progress = progress-speed;
+
+			for (var i=0; i<tasks[level].length; i++) {
+	
+				var rectx = progress * sizeWidth + (tasks[level][i].v_x) * sizeWidth;
+				var recty = tasks[level][i].v_y * sizeHeight;
+				var rectwidth = tasks[level][i].v_w * sizeWidth;
+				var rectheight = tasks[level][i].v_h * sizeHeight;
+ 
+				ctx.beginPath();
+				ctx.rect(rectx, recty, rectwidth, rectheight);
+ 
+				ctx.fillStyle = "orange";
+				ctx.fill();
+	
+										
+             	// auf kollision ueberpruefen
+				var wallx = rectx + rectwidth;
+				var wally = recty + rectheight;
+			
+				if (raketex + raketewidth > rectx && raketex < rectx + rectwidth) {
+					if (raketey + raketeheight > recty && raketey < recty + rectheight) { 
+						kollision = i;
+					}
+				}
+				else if (raketex < rectx + rectwidth && raketex > rectx) { // von rechts kommend
+					if (raketey + raketeheight > recty && raketey < recty + rectheight) {				
+						kollision = i;
+					}
+				}
+			
+				if (kollision > -1){
+
+
+
+					//if (wally > wallx){ //senkrechte balken
+					if (tasks[level][i].v_h > tasks[level][i].v_w) { //senkrechte balken
+						if (raketey > wally + recty && raketey < (recty + wally) * 1.05){
+							console.log("senkrecht: von unten");
+							stop_up = 1;
+						}		
+						if (raketex + raketewidth > rectx && raketex + raketewidth < wallx && raketey + raketeheight > recty && raketey < wally) {
+							console.log("senkrecht: von links");			
+							stop_right = 1;
+							raketex = raketex - speed * sizeWidth - 0.1;
+						}
+						else if (raketex < wallx && raketex > rectx) {	
+							console.log("senkrecht: von rechts");		
+							stop_left = 1;
+							raketex = raketex + speed;
+						}					
+					}
+				
+					else { //waagerechte balken
+						if (raketex + raketewidth > rectx && raketex  < wallx) {
+							stop_right = 1;
+							//console.log("waagerecht: von links");
+							//	raketex = raketex - speed * sizeWidth - 0.1;
+						}  
+						else if (raketex < wallx && raketex > wallx * 0.95) {
+							console.log("waagerecht: von rechts");
+							stop_left = 1;
+							raketex = raketex + 0.1;
+					
+						}
+						if (raketey < wally && raketey > recty) {
+							stop_up = 1;
+							console.log("waagerecht: von unten");
+							raketey = raketey + 0.1;
+						//	console.log("hallo_3");			
+						}
+						else if (raketey + raketeheight > recty && raketey + raketeheight < wally) {
+							stop_down = 1;
+							console.log("waagerecht: von oben");
+							raketey = raketey - 0.1;
+						//	console.log("hallo_4");
+						}
+					}				
+				}
+		}
+			
+			// steuerung und bewegungsgeschwindigkeit bei tastendruck
+
+//			console.log("stop_up: " + stop_up + ", stop_down: " + stop_down);
+
+			if (keys[38] && stop_up == 0) { // arrow up
+					raketey = raketey - speed_2;
+			}
+			if (keys[40] && stop_down == 0) { // arrow down
+					raketey = raketey + speed_2;
+			}
+			if (keys[37] && stop_left == 0) { // arrow left
+					raketex = raketex - speed_2;
+			}
+			if (keys[39] && stop_right == 0) { // arrow right
+					raketex = raketex + speed_2;
+			}
+		
+			stop_left = 0;
+			stop_right = 0;
+			stop_up = 0;
+			stop_down = 0;	
+			//update
+			requestAnimationFrame(update);
+
+		}
+
+		update();
+
+
+		</script>
+	</body>
+</html>
+
